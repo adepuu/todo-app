@@ -1,37 +1,17 @@
 import { FC } from "react";
-import styled from "styled-components";
 
 const Filter: FC = () => {
-  const FilterWrapper = styled.div`
-    padding-top: 16px;
-    padding-bottom: 16px;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background-color: white;
-  `;
-
-  const FilterItem = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  `;
-
   return (
-    <FilterWrapper>
-      <FilterItem>
+    <div className="py-4 w-full flex justify-around fixed bottom-0 left-0 bg-white">
+      <div className="flex justify-center items-center flex-col">
         <img src="/Playlist.svg" alt="filter" />
         <span>All</span>
-      </FilterItem>
-      <FilterItem>
+      </div>
+      <div className="flex justify-center items-center flex-col">
         <img src="/Tick.svg" alt="filter" />
         <span>Completed</span>
-      </FilterItem>
-    </FilterWrapper>
+      </div>
+    </div>
   );
 };
 export default Filter;
