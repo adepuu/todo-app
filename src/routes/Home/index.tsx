@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import Card from "../../components/Card";
-import { DummyToDo } from "../../constants/todo";
-import ToDo from "../../components/ToDo";
-import Filter from "../../components/Filter";
-import FloatingButton from "../../components/FloatingButton";
+import Header from "@/components/Header";
+import Card from "@/components/Card";
+import ToDo from "@/components/ToDo";
+import Filter from "@/components/Filter";
+import FloatingButton from "@/components/FloatingButton";
+import { useToDoContext } from "@/context/ToDoContext";
 
 const IndexPage = () => {
+  const { todos: ToDoList, handleComplete } = useToDoContext();
   const navigate = useNavigate();
 
   const handleRedirectToCreate = () => {
@@ -18,14 +19,14 @@ const IndexPage = () => {
     <div className="bg-primary relative">
       <Header />
       <div className="bg-secondary-light flex flex-col justify-center items-center mt-20 mb-20 py-5 px-2 gap-5 min-h-screen">
-        {DummyToDo.map((todo) => (
+        {ToDoList.map((todo) => (
           <Card key={todo.id}>
-            <ToDo {...todo} />
+            <ToDo handleComplete={handleComplete} {...todo} />
           </Card>
         ))}
       </div>
       <Filter />
-      <FloatingButton onClick={handleRedirectToCreate}/>
+      <FloatingButton onClick={handleRedirectToCreate} />
     </div>
   );
 };

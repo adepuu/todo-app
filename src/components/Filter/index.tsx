@@ -1,16 +1,32 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import Items from "./Items";
+import { useToDoContext } from "@/context/ToDoContext";
 
 const Filter: FC = () => {
+  const { metrics, activeFilter, setActiveFilter } = useToDoContext();
+
+  const handleClick = (filter: string) => {
+    setActiveFilter(filter);
+  };
+
+  useEffect(() => {
+    console.log("active filter changed to: ", activeFilter);
+  }, [activeFilter]);
+
   return (
     <div className="py-4 w-full flex justify-around fixed bottom-0 left-0 bg-white">
-      <div className="flex justify-center items-center flex-col">
-        <img src="/Playlist.svg" alt="filter" />
-        <span>All</span>
-      </div>
-      <div className="flex justify-center items-center flex-col">
-        <img src="/Tick.svg" alt="filter" />
-        <span>Completed</span>
-      </div>
+      <Items
+        isActive={activeFilter === "all"}
+        onClick={() => handleClick("all")}
+        icon="/Playlist.svg"
+        label={`All (${metrics.total})`}
+      />
+      <Items
+        isActive={activeFilter === "completed"}
+        onClick={() => handleClick("completed")}
+        icon="/Tick.svg"
+        label={`Completed (${metrics.completed})`}
+      />
     </div>
   );
 };
