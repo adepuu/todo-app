@@ -1,5 +1,5 @@
+import { TODO } from "@/types";
 import { FC } from "react";
-import { TODO } from "../../constants/todo";
 import { useNavigate } from "react-router-dom";
 
 interface ToDoProps extends TODO {
@@ -16,7 +16,7 @@ const ToDo: FC<ToDoProps> = ({
   handleDelete,
 }) => {
   const navigate = useNavigate();
-  
+
   const redirectToEdit = () => {
     const queryParam = new URLSearchParams();
     queryParam.append("id", id);

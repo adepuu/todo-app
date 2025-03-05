@@ -3,10 +3,11 @@ import * as Yup from "yup";
 import Header from "../../components/Header";
 import InputGroup from "../../components/InputGroup";
 import { Formik, FormikValues } from "formik";
-import { TODO } from "@/constants/todo";
-import { v4 as uuidv4 } from "uuid";
-import { addTodo, getTodo, updateTodo } from "@/features/todo";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { TODO } from "@/types";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "@/hooks/useToDoList";
+import { addTodo, updateTodo } from "@/features/todo/slice";
 
 const initialValues = {
   title: "",
@@ -23,6 +24,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreateToDoRoute: FC = () => {
+  const dispatch = useDispatch();
+  const { todos } = useAppSelector(({ todoReducer }) => todoReducer);
+
   // get the id from search param
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -30,28 +34,33 @@ const CreateToDoRoute: FC = () => {
 
   const handleSubmit = (values: FormikValues) => {
     const newTodo: TODO = {
-      id: uuidv4(),
+      id: id || "",
       title: values.title as string,
       description: values.detail as string,
       isComplete: false,
     };
 
     if (id) {
-      updateTodo(id, newTodo);
+      dispatch(
+        updateTodo({
+          id,
+          data: newTodo,
+        })
+      );
       alert("Todo updated successfully");
       navigate("/");
       return;
     }
-    addTodo(newTodo);
+    dispatch(addTodo(newTodo));
     alert("Todo added successfully");
     navigate("/");
   };
 
   const getInitialValues = () => {
     if (id) {
-      const todo = getTodo(id);
+      const todo = todos.find((todo) => todo.id === id);
       if (!todo) {
-        return initialValues
+        return initialValues;
       }
       return {
         title: todo.title,
@@ -59,7 +68,7 @@ const CreateToDoRoute: FC = () => {
       };
     }
     return initialValues;
-  }
+  };
   return (
     <div className="w-full mt-20">
       <Header />

@@ -1,12 +1,15 @@
 import { FC, useEffect } from "react";
 import Items from "./Items";
-import { useToDoContext } from "@/context/ToDoContext";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "@/hooks/useToDoList";
+import { setActiveFilter } from "@/features/todo/slice";
 
 const Filter: FC = () => {
-  const { metrics, activeFilter, setActiveFilter } = useToDoContext();
+  const dispatch = useDispatch();
+  const { metrics, activeFilter } = useAppSelector(({ todoReducer }) => todoReducer);
 
   const handleClick = (filter: string) => {
-    setActiveFilter(filter);
+    dispatch(setActiveFilter(filter));
   };
 
   useEffect(() => {

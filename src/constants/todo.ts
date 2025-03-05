@@ -1,9 +1,4 @@
-export interface TODO {
-  id: string;
-  title: string;
-  description: string;
-  isComplete: boolean;
-}
+import { TODO } from "@/types";
 
 export const DummyToDo: TODO[] = [
   {
