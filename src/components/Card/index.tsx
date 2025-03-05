@@ -11,7 +11,7 @@ const Card: FC<{ children: ReactNode; variant?: "square" | "rounded" }> = ({
   };
 
   return (
-    <div className={cn("bg-white p-6 shadow-md", variantClasses[variant])}>
+    <div className={cn("bg-white p-6 shadow-md max-w-md", variantClasses[variant])}>
       {children}
     </div>
   );

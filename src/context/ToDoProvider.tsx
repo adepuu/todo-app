@@ -1,14 +1,21 @@
-import { DummyToDo, TODO } from "@/constants/todo";
+import { TODO } from "@/constants/todo";
 import { ToDoContext } from "./ToDoContext";
-import { JSX, useMemo, useState, ReactNode, FC, useCallback } from "react";
+import { JSX, useMemo, useState, ReactNode, FC, useCallback, useEffect } from "react";
+import { deleteTodo, getAllTodo, updateTodo } from "@/features/todo";
 
 interface ToDoProviderProps {
   children: ReactNode | JSX.Element;
 }
 
 const ToDoProvider: FC<ToDoProviderProps> = ({ children }) => {
-  const [ToDoList, setToDoList] = useState<TODO[]>(DummyToDo);
+  const [ToDoList, setToDoList] = useState<TODO[]>([]);
   const [activeFilter, setActiveFilter] = useState("all");
+
+  useEffect(() => {
+    // get all todos from local storage for initial values
+    const todos = getAllTodo();
+    setToDoList(todos);
+  }, []);
 
   const completedCount = useMemo(() => {
     console.log("Calculating completed count");
@@ -19,7 +26,9 @@ const ToDoProvider: FC<ToDoProviderProps> = ({ children }) => {
     (id: string) => {
       const updatedList = ToDoList.map((todo) => {
         if (todo.id === id) {
-          return { ...todo, isComplete: true };
+          const updatedTodo = { ...todo, isComplete: true };
+          updateTodo(todo.id, updatedTodo);
+          return updatedTodo;
         }
         return todo;
       });
@@ -36,6 +45,24 @@ const ToDoProvider: FC<ToDoProviderProps> = ({ children }) => {
     });
   }, [ToDoList, activeFilter]);
 
+  const handleDelete = useCallback((id: string) => {
+    const updatedList = ToDoList.filter((todo) => todo.id !== id);
+    deleteTodo(id);
+    setToDoList(updatedList);
+  }, [ToDoList]);
+
+  const handleEdit = useCallback((id: string, data: TODO) => {
+    const updatedList = ToDoList.map((todo) => {
+      if (todo.id === id) {
+        updateTodo(todo.id, data);
+        return data;
+      }
+      return todo;
+    });
+    updateTodo(id, data);
+    setToDoList(updatedList);
+  }, [ToDoList]);
+
   return (
     <ToDoContext.Provider
       value={{
@@ -47,6 +74,8 @@ const ToDoProvider: FC<ToDoProviderProps> = ({ children }) => {
         activeFilter,
         setActiveFilter,
         handleComplete,
+        handleDelete,
+        handleEdit,
       }}
     >
       {children}

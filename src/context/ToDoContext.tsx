@@ -10,6 +10,8 @@ type ToDoContextType = {
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
   handleComplete: (id: string) => void;
+  handleDelete: (id: string) => void;
+  handleEdit: (id: string, data: TODO) => void;
 };
 
 export const ToDoContext = createContext<ToDoContextType>({
@@ -21,6 +23,8 @@ export const ToDoContext = createContext<ToDoContextType>({
   handleComplete: () => {},
   activeFilter: "all",
   setActiveFilter: () => {},
+  handleDelete: () => {},
+  handleEdit: () => {},
 });
 
 export const useToDoContext = () => {
